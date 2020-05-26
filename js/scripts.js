@@ -14616,30 +14616,6 @@ jQuery(document).ready(function() {
     });
 });
 
-function scrollToGatewayInputError() {
-    var displayError = jQuery('.gateway-errors,.assisted-cc-input-feedback').first(),
-        frm = displayError.closest('form');
-    if (!frm) {
-        frm = jQuery('form').first();
-    }
-    frm.find('button[type="submit"],input[type="submit"]')
-        .prop('disabled', false)
-        .removeClass('disabled')
-        .find('i.fas,i.far,i.fal,i.fab')
-        .removeAttr('class')
-        .addClass('fas fa-arrow-circle-right')
-        .find('span').toggleClass('hidden');
-
-    if (displayError.length) {
-        jQuery('html, body').animate(
-            {
-                scrollTop: displayError.offset().top - 50
-            },
-            500
-        );
-    }
-}
-
 /**
  * WHMCS authentication module
  *
@@ -15003,40 +14979,6 @@ jqClient: function () {
                 }
             )
         );
-    };
-
-    /**
-     * @param options
-     * @returns {*}
-     */
-    this.jsonGet = function (options) {
-        options = options || {};
-        this.get(options.url, options.data, function(response) {
-            if (response.warning) {
-                console.log('[WHMCS] Warning: ' + response.warning);
-                if (typeof options.warning === 'function') {
-                    options.warning(response.warning);
-                }
-            } else if (response.error) {
-                console.log('[WHMCS] Error: ' + response.error);
-                if (typeof options.error === 'function') {
-                    options.error(response.error);
-                }
-            } else {
-                if (typeof options.success === 'function') {
-                    options.success(response);
-                }
-            }
-        }, 'json').error(function(xhr, errorMsg){
-            console.log('[WHMCS] Error: ' + errorMsg);
-            if (typeof options.fail === 'function') {
-                options.fail(errorMsg);
-            }
-        }).always(function() {
-            if (typeof options.always === 'function') {
-                options.always();
-            }
-        });
     };
 
     /**
@@ -15633,16 +15575,6 @@ function () {
         });
     };
 
-    this.reloadCaptcha = function (element)
-    {
-        if (!element) {
-            element = jQuery('#inputCaptchaImage');
-        }
-
-        var src = jQuery(element).data('src');
-        jQuery(element).attr('src', src + '?nocache=' + (new Date()).getTime());
-    };
-
     return this;
 });
 
@@ -15721,11 +15653,11 @@ var recaptchaLoadComplete = false;
                 };
                 recaptchaContent.attr('data-callback', funcName);
 
-                // setup an on form submit event to ensure that we
-                // are allowing required field validation to occur before
-                // we do the invisible recaptcha checking
+                // alter submit button to integrate invisible recaptcha
+                // otherwise setup a callback to twiddle UI after grecaptcha
+                // has inject DOM
                 if (isInvisible) {
-                    frm.on('submit', function (event) {
+                    btnRecaptcha.on('click', function (event) {
                         if (!grecaptcha.getResponse().trim()) {
                             event.preventDefault();
                             grecaptcha.execute();
@@ -16841,9 +16773,6 @@ jQuery(document).ready(function() {
     // Prevent malicious window.opener activity from auto-linked URLs
     jQuery('a.autoLinked').click(function (e) {
         e.preventDefault();
-        if (jQuery(this).hasClass('disabled')) {
-            return false;
-        }
 
         var child = window.open();
         child.opener = null;
@@ -16885,7 +16814,7 @@ jQuery(document).ready(function() {
                 button.find('.loading').hide().end().removeAttr('disabled');
                 form.find('.login-feedback').html('');
                 if (data.error) {
-                    form.find('.login-feedback').html(data.error).hide().removeClass('hidden').slideDown();
+                    form.find('.login-feedback').html(data.error);
                 }
                 if (data.redirect !== undefined && data.redirect.substr(0, 7) === 'window|') {
                     window.open(data.redirect.substr(7), '_blank');
@@ -16946,7 +16875,7 @@ jQuery(document).ready(function() {
 
         // Check length
         if (length < 8 || length > 64) {
-            jQuery('#generatePwLengthError').removeClass('hidden').show();
+            jQuery('#generatePasswordLengthError').removeClass('hidden').show();
             return;
         }
 
@@ -17036,7 +16965,7 @@ jQuery(document).ready(function() {
                         btnClass: "btn open-modal",
                         icon: {
                             glyph: 'fas fa-question-circle',
-                            fa: 'fas fa-question-circle',
+                            fa: 'fa fa-question-circle',
                             'fa-3': 'icon-question-sign'
                         },
                         callback: function(e) {
@@ -17063,16 +16992,14 @@ jQuery(document).ready(function() {
         });
     });
 
-    var btnResendEmail = jQuery('#btnResendVerificationEmail');
-
     // Email verification
-    jQuery(btnResendEmail).click(function() {
+    jQuery('#btnResendVerificationEmail').click(function() {
         WHMCS.http.jqClient.post('clientarea.php',
             {
                 'token': csrfToken,
                 'action': 'resendVerificationEmail'
             }).done(function(data) {
-                jQuery(btnResendEmail).text(jQuery(btnResendEmail).data('email-sent')).prop('disabled', true);
+                jQuery('#btnResendVerificationEmail').html('Email Sent').prop('disabled', true);
             });
     });
 
@@ -17545,22 +17472,6 @@ function showNewCardInputFields() {
 }
 
 /**
- * Show new bank account input fields.
- */
-function showNewAccountInputFields() {
-    if (jQuery(".bank-details").hasClass("hidden")) {
-        jQuery(".bank-details").hide().removeClass("hidden");
-    }
-    jQuery(".bank-details").slideDown();
-
-    jQuery("#billingAddressChoice")
-        .slideDown()
-        .find('input[name="billingcontact"]')
-        .first()
-        .iCheck('check');
-}
-
-/**
  * Hide new credit card input fields.
  */
 function hideNewCardInputFields() {
@@ -17578,25 +17489,6 @@ function hideNewCardInputFields() {
     if (selectedBillingContactData.length) {
         jQuery('.billing-contact-info').hide();
         jQuery(selectedBillingContactData).show();
-    }
-}
-
-/**
- * Hide new bank account input fields.
- */
-function hideNewAccountInputFields() {
-    hideNewBillingAddressFields();
-
-    jQuery(".bank-details").slideUp();
-    jQuery("#billingAddressChoice").slideUp();
-
-    var selectedAccount = jQuery('input[name="paymethod"]:checked'),
-        selectedContactId = jQuery(selectedAccount).data('billing-contact-id'),
-        selectedContactData = jQuery('.billing-contact-info[data-billing-contact-id="' + selectedContactId + '"]');
-
-    if (selectedContactData.length) {
-        jQuery('.billing-contact-info').hide();
-        jQuery(selectedContactData).show();
     }
 }
 
@@ -17630,7 +17522,8 @@ function smoothScroll(element) {
     }, 500);
 }
 
-function irtpSubmit() {
+function irtpSubmit()
+{
     allowSubmit = true;
     var optOut = 0,
         optOutCheckbox = jQuery('#modalIrtpOptOut'),
@@ -17644,15 +17537,6 @@ function irtpSubmit() {
     formOptOut.val(optOut);
     formOptOutReason.val(optOutReason.val());
     jQuery('#frmDomainContactModification').submit();
-}
-
-function showOverlay(msg) {
-    jQuery('#fullpage-overlay .msg').html(msg);
-    jQuery('#fullpage-overlay').removeClass('hidden').show();
-}
-
-function hideOverlay() {
-    jQuery('#fullpage-overlay').hide();
 }
 
 /*!
@@ -17797,7 +17681,6 @@ function submitIdAjaxModalClickEvent ()
     }
     if (!canContinue) {
         btn.removeClass('disabled');
-        jQuery('#modalAjax .loader').hide();
         return;
     }
     var modalForm = jQuery('#modalAjax').find('form');
@@ -17913,7 +17796,18 @@ function updateAjaxModal(data) {
          */
         var submitButton = jQuery('#' + data.submitId);
         submitButton.off('click');
-        submitButton.on('click', submitIdAjaxModalClickEvent);
+        submitButton.on('click', function() {
+            var modalForm = jQuery('#modalAjax').find('form');
+            jQuery('#modalAjax .loader').show();
+            var modalPost = WHMCS.http.jqClient.post(modalForm.attr('action'), modalForm.serialize(),
+                function(data) {
+                    updateAjaxModal(data);
+                }, 'json').fail(function() {
+                    jQuery('#modalAjax .modal-body').html('An error occurred while communicating with the server. Please try again.');
+                    jQuery('#modalAjax .loader').fadeOut();
+                }
+            );
+        })
     }
 
     jQuery('#modalAjax .loader').fadeOut();

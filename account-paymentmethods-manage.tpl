@@ -48,7 +48,7 @@
     </div>
     <div class="fieldgroup-loading hidden">
         <div style="padding:30px;text-align:center;">
-            <i class="fas fa-spinner fa-spin"></i>
+            <i class="fa fa-spinner fa-spin"></i>
             {$LANG.pleasewait}
         </div>
     </div>
@@ -186,9 +186,7 @@
         <div id="tokenGatewayRemoteUpdateOutput" class="text-center">{$remoteUpdate}</div>
     {else}
         <div id="tokenGatewayRemoteInputOutput" class="text-center" align="center"></div>
-        <div class="text-center">
-            <iframe name="ccframe" class="auth3d-area" width="90%" height="600" scrolling="auto" src="about:blank"></iframe>
-        </div>
+        <iframe name="ccframe" class="auth3d-area" width="90%" height="600" scrolling="auto" src="about:blank"></iframe>
     {/if}
 </div>
 
@@ -231,13 +229,11 @@
                                        class="form-control">
                             </div>
 
-                            {if $showTaxIdField}
-                                <div class="form-group">
-                                    <label for="inputTaxId" class="control-label">{lang key=$taxIdLabel}</label>
-                                    <input type="text" name="tax_id" id="inputTaxId" class="form-control"
-                                           value="{$contactTaxId}">
-                                </div>
-                            {/if}
+                            <div class="form-group">
+                                <label for="inputTaxId" class="control-label">Tax ID/VAT Number</label>
+                                <input type="text" name="tax_id" id="inputTaxId" class="form-control"
+                                       value="{$contactTaxId}">
+                            </div>
 
                         </div>
                         <div class="col-sm-6">

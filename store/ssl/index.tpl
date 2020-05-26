@@ -169,27 +169,22 @@
             <p>{lang key="store.ssl.landingPage.evs.whatIs"}</p>
             <br>
             <div class="row text-center">
-                <div class="col-sm-6 col-md-4">
-                    <div class="item">
-                        <img src="{$WEB_ROOT}/assets/img/marketconnect/symantec/shopfront-dv.png">
-                        <h4>{lang key="store.ssl.landingPage.dv"}</h4>
-                    </div>
+                <div class="col-md-6">
+                    <h4>{lang key="store.ssl.landingPage.evs.standard"}</h4>
+                    <a href="{routePath('store-ssl-certificates-dv')}">
+                        <img src="{$WEB_ROOT}/assets/img/marketconnect/symantec/ssl-dv-icon.png" class="img-responsive">
+                    </a>
+                    <br>
                 </div>
-                <div class="col-sm-6 col-md-4">
-                    <div class="item">
-                        <img src="{$WEB_ROOT}/assets/img/marketconnect/symantec/shopfront-ov.png">
-                        <h4>{lang key="store.ssl.landingPage.ov"}</h4>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
-                    <div class="item">
-                        <img src="{$WEB_ROOT}/assets/img/marketconnect/symantec/shopfront-ev.png">
-                        <h4>{lang key="store.ssl.landingPage.ev"}</h4>
-                    </div>
+                <div class="col-md-6">
+                    <h4>{lang key="store.ssl.landingPage.evs.ev"}</h4>
+                    <a href="{routePath('store-ssl-certificates-ev')}">
+                        <img src="{$WEB_ROOT}/assets/img/marketconnect/symantec/ssl-ev-icon.png" class="img-responsive">
+                    </a>
+                    <br>
                 </div>
             </div>
-            <br>
-            <p class="text-center"><a href="{routePath('store-ssl-certificates-ev')}" class="btn btn-default">{lang key="store.ssl.landingPage.evs.learn"}</a></p>
+            <p class="text-center"><a href="{routePath('store-ssl-certificates-ev')}">{lang key="store.ssl.landingPage.evs.learn"}</a></p>
         </div>
     </div>
 
@@ -379,7 +374,7 @@ jQuery(document).ready(function() {
       $expand.html('<i class="fas fa-chevron-right"></i>');
     }
   });
-  jQuery('p.help-me-choose').click(function(e) {
+  jQuery('.help-me-choose').click(function(e) {
     e.preventDefault();
     if (!jQuery('#collapseHelpMeChoose').hasClass('in')) {
       jQuery('#collapseHelpMeChoose').collapse('show');

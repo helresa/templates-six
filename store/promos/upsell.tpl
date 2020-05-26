@@ -11,7 +11,7 @@
             <h3>
                 {$promotion->getHeadline()}
                 {if $promotion->getLearnMoreRoute()}
-                    <small><a href="{routePath($promotion->getLearnMoreRoute())}">{lang key='learnmore'}...</a></small>
+                    <small><a href="{routePath($promotion->getLearnMoreRoute())}">Learn more...</a></small>
                 {/if}
             </h3>
             <h4>{$promotion->getTagline()}</h4>
@@ -33,12 +33,11 @@
                     <input type="hidden" name="{$key}" value="{$value}">
                 {/foreach}
                 <button type="submit" class="btn btn-success">
+                    {$promotion->getCta()} {$product->name}
                     {if $product->isFree()}
-                        {$promotion->getCta()}
                         {lang key="orderfree"}
                     {else}
-                        {$promotion->getCta()} {$product->name}
-                        {lang key="fromJust"}
+                        from just
                         {if $product->pricing()->first()->isYearly()}
                             {$product->pricing()->first()->yearlyPrice()}
                         {else}

@@ -4,9 +4,7 @@
 
     <div class="hero">
         <div class="container">
-            <div class="logo-container">
-                <img src="{$WEB_ROOT}/assets/img/marketconnect/sitelock/logo.png">
-            </div>
+            <img src="{$WEB_ROOT}/assets/img/marketconnect/sitelock/logo.png">
             <h2>{lang key="store.sitelock.tagline"}</h2>
         </div>
     </div>

@@ -45,8 +45,6 @@
                                 <p>Eliminate Spam & Viruses from email before they ever reach your network</p>
                                 {if $products.incoming->pricing()->best()}
                                     <div class="price">From {$products.incoming->pricing()->best()->toFullString()}/domain</div>
-                                {elseif $inPreview}
-                                    <div class="price">-</div>
                                 {/if}
                                 <a href="#" class="btn btn-learn-more" data-target="incoming">
                                     Learn more
@@ -68,8 +66,6 @@
                                 <p>Prevent Spam & Viruses from ever unknowingly leaving your network</p>
                                 {if $products.outgoing->pricing()->best()}
                                     <div class="price">From {$products.outgoing->pricing()->best()->toFullString()}/domain</div>
-                                {elseif $inPreview}
-                                    <div class="price">-</div>
                                 {/if}
                                 <a href="#" class="btn btn-learn-more" data-target="outgoing">
                                     Learn more
@@ -93,10 +89,8 @@
                                     <div class="price">From {$products.incomingarchiving->pricing()->best()->toFullString()}/domain</div>
                                 {elseif $products.outgoingarchiving && $products.outgoingarchiving->pricing()->best()}
                                     <div class="price">From {$products.outgoingarchiving->pricing()->best()->toFullString()}/domain</div>
-                                {elseif $products.incomingoutgoingarchiving->pricing()->best()}
+                                {else}
                                     <div class="price">From {$products.incomingoutgoingarchiving->pricing()->best()->toFullString()}/domain</div>
-                                {elseif $inPreview}
-                                    <div class="price">-</div>
                                 {/if}
                                 <a href="#" class="btn btn-learn-more" data-target="archiving">
                                     Learn more
